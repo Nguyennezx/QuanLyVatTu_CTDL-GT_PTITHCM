@@ -8,7 +8,99 @@
 #include <QLabel>
 #include <QTableWidget>
 #include <QHeaderView>
-#include <QRegularExpressionValidator>
+#include <string>
+using std::string;
+
+static const string CHUSO_VT[10] = {"không","một","hai","ba","bốn","năm","sáu","bảy","tám","chín"};
+
+static string vietHoaChuCai(const string& s) {
+    if (s.empty()) return s;
+    string r = s;
+    r[0] = toupper((unsigned char)r[0]);
+    return r;
+}
+
+static string docBaChuSo(int so) {
+    string kq = "";
+    int tram = so / 100;
+    int chuc = (so % 100) / 10;
+    int donvi = so % 10;
+
+    if (tram > 0) {
+        kq += CHUSO_VT[tram] + " trăm";
+        if (chuc == 0 && donvi > 0) kq += " linh";
+    }
+    if (chuc >= 2) {
+        if (!kq.empty()) kq += " ";
+        kq += CHUSO_VT[chuc] + " mươi";
+        if (donvi == 1) kq += " mốt";
+        else if (donvi == 4) kq += " tư";
+        else if (donvi == 5) kq += " lăm";
+        else if (donvi > 0) kq += " " + CHUSO_VT[donvi];
+    } else if (chuc == 1) {
+        if (!kq.empty()) kq += " ";
+        kq += "mười";
+        if (donvi == 5) kq += " lăm";
+        else if (donvi > 0) kq += " " + CHUSO_VT[donvi];
+    } else if (chuc == 0 && donvi > 0) {
+        if (!kq.empty()) kq += " ";
+        kq += CHUSO_VT[donvi];
+    }
+    return kq;
+}
+
+static string docNhom(int gia, bool batBuocDu3ChuSo) {
+    if (!batBuocDu3ChuSo) return docBaChuSo(gia);
+    int tram = gia / 100;
+    int chuc = (gia % 100) / 10;
+    int donvi = gia % 10;
+    string kq = (tram == 0 ? "không" : CHUSO_VT[tram]) + " trăm";
+    if (chuc == 0 && donvi > 0) kq += " linh " + CHUSO_VT[donvi];
+    else if (chuc == 1) {
+        kq += " mười";
+        if (donvi == 5) kq += " lăm";
+        else if (donvi > 0) kq += " " + CHUSO_VT[donvi];
+    } else if (chuc >= 2) {
+        kq += " " + CHUSO_VT[chuc] + " mươi";
+        if (donvi == 1) kq += " mốt";
+        else if (donvi == 4) kq += " tư";
+        else if (donvi == 5) kq += " lăm";
+        else if (donvi > 0) kq += " " + CHUSO_VT[donvi];
+    }
+    return kq;
+}
+
+static const string DONVI_NHOM[8] = {"", "nghìn", "triệu", "tỷ", "nghìn tỷ", "triệu tỷ", "tỷ tỷ", ""};
+
+static string docSoThanhChu(long long soTien) {
+    if (soTien == 0) return "Không đồng";
+    bool am = soTien < 0;
+    if (am) soTien = -soTien;
+
+    int nhom[8];
+    int soNhom = 0;
+    long long n = soTien;
+    while (n > 0 && soNhom < 8) {
+        nhom[soNhom] = (int)(n % 1000);
+        soNhom++;
+        n /= 1000;
+    }
+
+    string ketQua = "";
+    for (int i = soNhom - 1; i >= 0; i--) {
+        int gia = nhom[i];
+        bool laNhomDauTien = (i == soNhom - 1);
+        if (gia == 0) continue;
+        string phan = docNhom(gia, !laNhomDauTien);
+        if (!ketQua.empty()) ketQua += " ";
+        ketQua += phan;
+        if (i < 8 && !DONVI_NHOM[i].empty()) ketQua += " " + DONVI_NHOM[i];
+    }
+    ketQua += " đồng";
+    if (am) ketQua = "Âm " + ketQua;
+    else ketQua = vietHoaChuCai(ketQua);
+    return ketQua;
+}
 
 InHoaDonDialog::InHoaDonDialog(TreeVT& rootRef, DS_NHANVIEN& dsRef, QWidget* parent)
     : QDialog(parent), root(rootRef), dsnv(dsRef)

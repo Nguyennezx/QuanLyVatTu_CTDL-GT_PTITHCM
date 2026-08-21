@@ -25,5 +25,4 @@ bool ghiNhanHoaDon(DS_NHANVIEN& dsnv, int idxNV, TreeVT root, const char* soHD, 
 
 nodeHD* timHoaDonTrongHeThong(const DS_NHANVIEN& dsnv, const char* soHD, int& idxNV);
 
-std::string docSoThanhChu(long long soTien);
 #endif // HOADONLOGIC_H
