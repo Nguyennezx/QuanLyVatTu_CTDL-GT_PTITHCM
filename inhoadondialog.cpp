@@ -74,8 +74,6 @@ static const string DONVI_NHOM[8] = {"", "nghìn", "triệu", "tỷ", "nghìn t�
 
 static string docSoThanhChu(long long soTien) {
     if (soTien == 0) return "Không đồng";
-    bool am = soTien < 0;
-    if (am) soTien = -soTien;
 
     int nhom[8];
     int soNhom = 0;
@@ -97,8 +95,7 @@ static string docSoThanhChu(long long soTien) {
         if (i < 8 && !DONVI_NHOM[i].empty()) ketQua += " " + DONVI_NHOM[i];
     }
     ketQua += " đồng";
-    if (am) ketQua = "Âm " + ketQua;
-    else ketQua = vietHoaChuCai(ketQua);
+    ketQua = vietHoaChuCai(ketQua);
     return ketQua;
 }
 

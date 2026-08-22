@@ -44,17 +44,20 @@ bool suaVT(TreeVT root, const char* mavt, const char* tenvtMoi, const char* dvtM
     return true;
 }
 
-nodeVT* timNodeNhoNhat(nodeVT* root) {
-    nodeVT* hienTai = root;
-    while (hienTai != nullptr && hienTai->left != nullptr) {
-        hienTai = hienTai->left;
+static void removeMinAndCopy(nodeVT*& r, nodeVT* victim) {
+    if (r->left) {
+        removeMinAndCopy(r->left, victim);
+    } else {
+        victim->vt = r->vt;
+        nodeVT* t = r;
+        r = r->right;
+        delete t;
     }
-    return hienTai; // Trả về Node nhỏ nhất tìm được
 }
 
 bool xoaVT(TreeVT& root, const char* mavt, std::string& loi) {
     if (root == nullptr) {
-        loi = "Khong tim thay vat tu!";
+        loi = "Không tìm thấy vật tư!";
         return false;
     }
 
@@ -67,29 +70,22 @@ bool xoaVT(TreeVT& root, const char* mavt, std::string& loi) {
     }
     else {
         if (root->vt.DaXuatHienTrongHD) {
-            loi = "Vat tu da xuat hien trong hoa don, khong duoc phep xoa!";
+            loi = "Vật tư đã xuất hiện trong hóa đơn! Không được phép xóa";   // ĐỒNG BỘ - có dấu, khớp câu chữ suaVT
             return false;
         }
-
-        // --- TH 1: Node KHÔNG CÓ CON TRÁI  ---
-        if (root->left == nullptr) {
-            nodeVT* nodeCanXoa = root;
-            root = root->right;
-            delete nodeCanXoa;
-        }
-        // --- TH 2: Node KHÔNG CÓ CON PHẢI ---
-        else if (root->right == nullptr) {
-            nodeVT* nodeCanXoa = root;
+        // Xoa node la hoac co con trai
+        if (!root->right) {
+            nodeVT* t = root;
             root = root->left;
-            delete nodeCanXoa;
-        }
-        // --- TH 3: Node CÓ ĐỦ 2 CON ---
-        else {
-            nodeVT* nodeTheMang = timNodeNhoNhat(root->right);
-
-            root->vt = nodeTheMang->vt;
-            std::string loiPhu = "";
-            xoaVT(root->right, nodeTheMang->vt.MAVT, loiPhu);
+            delete t;
+        // Co con phai
+        } else if (!root->left) {
+            nodeVT* t = root;
+            root = root->right;
+            delete t;
+        // co 2 con
+        } else {
+            removeMinAndCopy(root->right, root);
         }
         return true;
     }
