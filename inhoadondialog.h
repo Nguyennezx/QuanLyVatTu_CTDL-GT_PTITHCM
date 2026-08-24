@@ -7,6 +7,7 @@ class QLineEdit;
 class QPushButton;
 class QLabel;
 class QTableWidget;
+class QTextEdit;
 
 class InHoaDonDialog : public QDialog {
     Q_OBJECT
@@ -14,21 +15,18 @@ public:
     explicit InHoaDonDialog(TreeVT& rootRef, DS_NHANVIEN& dsRef, QWidget* parent = nullptr);
 private slots:
     void onTimClicked();
-    void onChonHDTrongDanhSach(int row, int column);   // MỚI
+    void onChonHDTrongDanhSach(int row, int column);
 private:
     TreeVT& root;
     DS_NHANVIEN& dsnv;
 
-    QTableWidget* danhSachTable;   // MỚI — bảng liệt kê toàn bộ hóa đơn
+    QTableWidget* danhSachTable;
     QLineEdit* soHDEdit;
     QPushButton* timButton;
-    QLabel* thongTinLabel;
-    QTableWidget* table;
-    QLabel* tongTienLabel;
-    QLabel* tienChuLabel;
     QLabel* errorLabel;
+    QTextEdit* hoaDonView;
 
-    void napDanhSachHD();          // MỚI — đổ toàn bộ hóa đơn vào danhSachTable
+    void napDanhSachHD();
     void hienThiHoaDon(nodeHD* hd, int idxNV);
     void xoaBang();
 };

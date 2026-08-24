@@ -7,8 +7,11 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QTableWidget>
+#include <QTextEdit>
 #include <QHeaderView>
+#include <QRegularExpressionValidator>
 #include <string>
+#include <cctype>
 using std::string;
 
 static const string CHUSO_VT[10] = {"không","một","hai","ba","bốn","năm","sáu","bảy","tám","chín"};
@@ -103,9 +106,8 @@ InHoaDonDialog::InHoaDonDialog(TreeVT& rootRef, DS_NHANVIEN& dsRef, QWidget* par
     : QDialog(parent), root(rootRef), dsnv(dsRef)
 {
     setWindowTitle("In hóa đơn");
-    resize(700, 650);
+    resize(700, 700);
 
-    // ==== Bảng danh sách toàn bộ hóa đơn — MỚI ====
     QLabel* danhSachTitle = new QLabel("Chọn 1 hóa đơn trong danh sách, hoặc nhập số HĐ bên dưới:", this);
     danhSachTable = new QTableWidget(this);
     danhSachTable->setColumnCount(4);
@@ -113,9 +115,8 @@ InHoaDonDialog::InHoaDonDialog(TreeVT& rootRef, DS_NHANVIEN& dsRef, QWidget* par
     danhSachTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     danhSachTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
     danhSachTable->setSelectionBehavior(QAbstractItemView::SelectRows);
-    danhSachTable->setMaximumHeight(180);
+    danhSachTable->setMaximumHeight(160);
 
-    // ==== Ô nhập nhanh ====
     soHDEdit = new QLineEdit(this);
     soHDEdit->setValidator(new QRegularExpressionValidator(QRegularExpression("[A-Za-z0-9]{0,20}"), this));
     soHDEdit->setPlaceholderText("Hoặc gõ trực tiếp số hóa đơn...");
@@ -126,27 +127,9 @@ InHoaDonDialog::InHoaDonDialog(TreeVT& rootRef, DS_NHANVIEN& dsRef, QWidget* par
     errorLabel->setVisible(false);
     errorLabel->setWordWrap(true);
 
-    thongTinLabel = new QLabel(this);
-    thongTinLabel->setWordWrap(true);
-
-    table = new QTableWidget(this);
-    table->setColumnCount(5);
-    table->setHorizontalHeaderLabels({"Tên vật tư", "Số lượng", "Đơn giá", "VAT (%)", "Thành tiền"});
-    table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    table->setSelectionBehavior(QAbstractItemView::SelectRows);
-
-    tongTienLabel = new QLabel(this);
-    tongTienLabel->setAlignment(Qt::AlignRight);
-    QFont f = tongTienLabel->font();
-    f.setPointSize(13);
-    f.setBold(true);
-    tongTienLabel->setFont(f);
-    tongTienLabel->setStyleSheet("color: #1976d2;");
-
-    tienChuLabel = new QLabel(this);
-    tienChuLabel->setAlignment(Qt::AlignRight);
-    tienChuLabel->setStyleSheet("color: black; font-size: 16px;");
+    hoaDonView = new QTextEdit(this);
+    hoaDonView->setReadOnly(true);
+    hoaDonView->setStyleSheet("background: white;");
 
     QHBoxLayout* timLayout = new QHBoxLayout();
     timLayout->addWidget(new QLabel("Số hóa đơn:", this));
@@ -158,18 +141,14 @@ InHoaDonDialog::InHoaDonDialog(TreeVT& rootRef, DS_NHANVIEN& dsRef, QWidget* par
     mainLayout->addWidget(danhSachTable);
     mainLayout->addLayout(timLayout);
     mainLayout->addWidget(errorLabel);
-    mainLayout->addWidget(thongTinLabel);
-    mainLayout->addWidget(table);
-    mainLayout->addWidget(tongTienLabel);
-    mainLayout->addWidget(tienChuLabel);
+    mainLayout->addWidget(hoaDonView);
 
     connect(timButton, &QPushButton::clicked, this, &InHoaDonDialog::onTimClicked);
     connect(soHDEdit, &QLineEdit::returnPressed, this, &InHoaDonDialog::onTimClicked);
     connect(danhSachTable, &QTableWidget::cellClicked, this, &InHoaDonDialog::onChonHDTrongDanhSach);
 
-    napDanhSachHD();   // đổ danh sách ngay khi mở dialog
+    napDanhSachHD();
 }
-
 
 void InHoaDonDialog::napDanhSachHD() {
     danhSachTable->setRowCount(0);
@@ -201,14 +180,11 @@ void InHoaDonDialog::onChonHDTrongDanhSach(int row, int /*column*/) {
     QTableWidgetItem* item = danhSachTable->item(row, 0);
     if (!item) return;
     soHDEdit->setText(item->text());
-    onTimClicked();   // tái sử dụng logic tìm + hiển thị đã có
+    onTimClicked();
 }
 
 void InHoaDonDialog::xoaBang() {
-    table->setRowCount(0);
-    thongTinLabel->clear();
-    tongTienLabel->clear();
-    tienChuLabel->clear();
+    hoaDonView->clear();
 }
 
 void InHoaDonDialog::onTimClicked() {
@@ -240,29 +216,77 @@ void InHoaDonDialog::hienThiHoaDon(nodeHD* hd, int idxNV) {
                        .arg(hd->hd.NgayLap.ngay, 2, 10, QChar('0'))
                        .arg(hd->hd.NgayLap.thang, 2, 10, QChar('0'))
                        .arg(hd->hd.NgayLap.nam);
-    QString loai = (hd->hd.Loai == 'N') ? "Phiếu nhập" : "Phiếu xuất";
-
-    thongTinLabel->setText(QString("<b>Ngày lập:</b> %1 &nbsp;&nbsp; <b>Người lập:</b> %2 &nbsp;&nbsp; <b>Loại:</b> %3")
-                               .arg(ngay, hoTen, loai));
+    QString loai = (hd->hd.Loai == 'N') ? "PHIẾU NHẬP KHO" : "PHIẾU XUẤT KHO";
 
     const DS_CTHD& ds = hd->hd.dscthd;
-    table->setRowCount(ds.n);
+
+    QString hangHoa;
     for (int i = 0; i < ds.n; i++) {
         const CT_HOADON& ct = ds.nodes[i];
         nodeVT* vtNode = timVT(root, ct.MAVT);
         QString tenVT = vtNode ? QString::fromUtf8(vtNode->vt.TENVT) : "(vật tư đã bị xóa khỏi danh mục)";
-
+        QString dvt = vtNode ? QString::fromUtf8(vtNode->vt.DVT) : "-";
         double thanhTien = tinhTriGiaDong(ct);
-        table->setItem(i, 0, new QTableWidgetItem(tenVT));
-        table->setItem(i, 1, new QTableWidgetItem(QString::number(ct.SoLuong)));
-        table->setItem(i, 2, new QTableWidgetItem(QString::number(ct.DonGia, 'f', 0)));
-        table->setItem(i, 3, new QTableWidgetItem(QString::number(ct.VAT, 'f', 1)));
-        table->setItem(i, 4, new QTableWidgetItem(QString::number(thanhTien, 'f', 0)));
+        QString mauNen = (i % 2 == 0) ? "#ffffff" : "#f4f6f8";
+
+        hangHoa += QString(
+                       "<tr style='background-color:%1;'>"
+                       "<td style='padding:7px 8px; border:1px solid #ccc; text-align:center;'>%2</td>"
+                       "<td style='padding:7px 8px; border:1px solid #ccc;'>%3</td>"
+                       "<td style='padding:7px 8px; border:1px solid #ccc; text-align:center;'>%4</td>"
+                       "<td style='padding:7px 8px; border:1px solid #ccc; text-align:right;'>%5</td>"
+                       "<td style='padding:7px 8px; border:1px solid #ccc; text-align:right;'>%6</td>"
+                       "<td style='padding:7px 8px; border:1px solid #ccc; text-align:right;'>%7</td>"
+                       "<td style='padding:7px 8px; border:1px solid #ccc; text-align:right; font-weight:bold;'>%8</td>"
+                       "</tr>"
+                       ).arg(mauNen).arg(i + 1).arg(tenVT).arg(dvt).arg(ct.SoLuong)
+                       .arg(QString::number(ct.DonGia, 'f', 0))
+                       .arg(QString::number(ct.VAT, 'f', 1) + "%")
+                       .arg(QString::number(thanhTien, 'f', 0));
     }
 
     double tongTien = tinhTongTriGiaHD(ds);
-    tongTienLabel->setText(QString("TỔNG TRỊ GIÁ HÓA ĐƠN: %1 VNĐ").arg(QString::number(tongTien, 'f', 0)));
-
     QString tienChu = QString::fromStdString(docSoThanhChu(static_cast<long long>(tongTien)));
-    tienChuLabel->setText("(Bằng chữ: " + tienChu + ")");
+
+    QString html = QString(R"(
+<div style='font-family:"Times New Roman", serif; background:#ffffff; border:2px solid #333; padding:24px; max-width:680px; margin:auto;'>
+
+  <h1 style='text-align:center; margin:6px 0 4px 0; font-size:20pt;'>%1</h1>
+  <p style='text-align:center; margin:0 0 18px 0; font-style:italic; color:#555; font-size:12pt;'>Ngày %3</p>
+
+  <table width='100%%' style='margin-bottom:16px; font-size:11pt;'>
+    <tr>
+      <td width='30%%'><b>Số phiếu:</b></td><td width='70%%'>%2</td>
+    </tr>
+    <tr>
+      <td width='30%%'><b>Người lập:</b></td><td width='70%%'>%4</td>
+    </tr>
+  </table>
+
+  <table width='100%%' style='border-collapse:collapse; font-size:10.5pt;'>
+    <tr style='background-color:#2c3e50;'>
+      <th style='padding:8px; border:1px solid #ccc; color:white;'>STT</th>
+      <th style='padding:8px; border:1px solid #ccc; color:white;'>Tên vật tư</th>
+      <th style='padding:8px; border:1px solid #ccc; color:white;'>ĐVT</th>
+      <th style='padding:8px; border:1px solid #ccc; color:white;'>SL</th>
+      <th style='padding:8px; border:1px solid #ccc; color:white;'>Đơn giá</th>
+      <th style='padding:8px; border:1px solid #ccc; color:white;'>VAT</th>
+      <th style='padding:8px; border:1px solid #ccc; color:white;'>Thành tiền</th>
+    </tr>
+    %5
+  </table>
+
+  <table width='100%%' style='margin-top:10px;'>
+    <tr>
+      <td style='text-align:right; font-size:13pt; font-weight:bold;'>TỔNG CỘNG:</td>
+      <td width='28%%' style='text-align:right; font-size:14pt; font-weight:bold; color:#c0392b;'>%6 VNĐ</td>
+    </tr>
+  </table>
+  <p style='text-align:right; font-style:italic; color:#333; font-size:13pt; margin-top:4px;'>(Bằng chữ: %7)</p>
+
+</div>
+)").arg(loai, hd->hd.SoHD, ngay, hoTen, hangHoa,
+                            QString::number(tongTien, 'f', 0), tienChu);
+
+    hoaDonView->setHtml(html);
 }
