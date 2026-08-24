@@ -146,6 +146,7 @@ InHoaDonDialog::InHoaDonDialog(TreeVT& rootRef, DS_NHANVIEN& dsRef, QWidget* par
     connect(timButton, &QPushButton::clicked, this, &InHoaDonDialog::onTimClicked);
     connect(soHDEdit, &QLineEdit::returnPressed, this, &InHoaDonDialog::onTimClicked);
     connect(danhSachTable, &QTableWidget::cellClicked, this, &InHoaDonDialog::onChonHDTrongDanhSach);
+    connect(soHDEdit, &QLineEdit::textChanged, this, &InHoaDonDialog::onLocDanhSach);
 
     napDanhSachHD();
 }
@@ -173,6 +174,23 @@ void InHoaDonDialog::napDanhSachHD() {
             p = p->next;
             row++;
         }
+    }
+}
+
+void InHoaDonDialog::onLocDanhSach() {
+    QString keyword = soHDEdit->text().trimmed().toUpper();
+    for (int row = 0; row < danhSachTable->rowCount(); row++) {
+        bool khop = keyword.isEmpty();
+        if (!khop) {
+            for (int col = 0; col < danhSachTable->columnCount(); col++) {
+                QTableWidgetItem* item = danhSachTable->item(row, col);
+                if (item && item->text().toUpper().contains(keyword)) {
+                    khop = true;
+                    break;
+                }
+            }
+        }
+        danhSachTable->setRowHidden(row, !khop);
     }
 }
 

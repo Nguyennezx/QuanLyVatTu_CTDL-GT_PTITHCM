@@ -16,6 +16,7 @@ public:
 private slots:
     void onTimClicked();
     void onChonHDTrongDanhSach(int row, int column);
+    void onLocDanhSach();
 private:
     TreeVT& root;
     DS_NHANVIEN& dsnv;
