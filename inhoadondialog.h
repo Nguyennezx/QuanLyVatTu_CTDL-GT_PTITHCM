@@ -30,4 +30,7 @@ private:
     void hienThiHoaDon(nodeHD* hd, int idxNV);
     void xoaBang();
 };
+
+std::string docSoThanhChu(long long soTien);
+
 #endif // INHOADONDIALOG_H

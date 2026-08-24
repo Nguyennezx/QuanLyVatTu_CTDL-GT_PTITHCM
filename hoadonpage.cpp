@@ -297,5 +297,8 @@ void HoaDonPage::capNhatBangCTHD() {
         ui->tableCTHD->setItem(i, 5, new QTableWidgetItem(QString::number(thanhTien, 'f', 0)));
     }
 
-    ui->tongTienLabel->setText(QString("%1 VNĐ").arg(QString::number(tongTienHD, 'f', 0)));
+    QString tienChu = QString::fromStdString(docSoThanhChu(static_cast<long long>(tongTienHD)));
+    ui->tongTienLabel->setText(QString("%1 VNĐ\n(Bằng chữ: %2)")
+                                   .arg(QString::number(tongTienHD, 'f', 0))
+                                   .arg(tienChu));
 }

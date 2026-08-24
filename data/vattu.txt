@@ -1,11 +1,11 @@
 VT025|ghế nhựa|cái|40|0
 VT023|sạc điện thoại|cái|20|0
 VT001|Đèn|Cái|10000|0
-VT004|Quạt|cái|10|0
+VT004|Quạt|cái|5|1
 VT026|quạt điện|cái|8|0
 VT027|máy in|cái|3|0
 VT028|máy chiếu|cái|2|0
-VT029|bảng trắng|cái|10|0
+VT029|bảng trắng|cái|5|1
 VT031|giấy A4|ram|50|0
 VT032|kệ sách|cái|6|0
 VT033|đèn LED|cái|25|0

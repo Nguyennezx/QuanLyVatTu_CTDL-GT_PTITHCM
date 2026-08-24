@@ -75,7 +75,7 @@ static string docNhom(int gia, bool batBuocDu3ChuSo) {
 
 static const string DONVI_NHOM[8] = {"", "nghìn", "triệu", "tỷ", "nghìn tỷ", "triệu tỷ", "tỷ tỷ", ""};
 
-static string docSoThanhChu(long long soTien) {
+string docSoThanhChu(long long soTien) {
     if (soTien == 0) return "Không đồng";
 
     int nhom[8];

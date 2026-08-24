@@ -3,5 +3,9 @@ HD|HD01|31|7|2026|N
 CT|VT041|20|1e+06|5
 NV|NV03|Pham|Anh|Nam
 NV|NV004|Phạm Đình Gia|Nguyên|Nam
+NV|NV007|Trần Lê Anh|Nguyên|Nam
+HD|HD005|25|8|2026|X
+CT|VT004|5|20000|5
+CT|VT029|5|10000|5
 NV|NV02|Duy Anh|Phước|Nam
 NV|NV01|Minh|Xuyến|Nam

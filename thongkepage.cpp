@@ -1,6 +1,7 @@
 #include "thongkepage.h"
 #include "ui_thongkepage.h"
 #include "thongkelogic.h"
+#include "inhoadondialog.h"
 
 #include <QDate>
 #include <QDateEdit>
@@ -74,15 +75,27 @@ ThongKePage::ThongKePage(TreeVT &rootRef, DS_NHANVIEN &dsRef, QWidget *parent)
     QTableWidget* bangHoaDon = new QTableWidget(this);
     QTableWidget* bangTopVatTu = new QTableWidget(this);
 
-    bangHoaDon->setColumnCount(5);
-    bangHoaDon->setHorizontalHeaderLabels({"So HD", "Ngay lap", "Loai", "Nhan vien lap", "Tri gia"});
-    bangHoaDon->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    bangHoaDon->setColumnCount(6);
+    bangHoaDon->setHorizontalHeaderLabels({"So HD", "Ngay lap", "Loai", "Nhan vien lap", "Tri gia", "Bang chu"});
+    bangHoaDon->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
+    bangHoaDon->setColumnWidth(0, 90);  // So HD
+    bangHoaDon->setColumnWidth(1, 110); // Ngay lap
+    bangHoaDon->setColumnWidth(2, 80);  // Loai
+    bangHoaDon->setColumnWidth(3, 180); // Nhan vien lap
+    bangHoaDon->setColumnWidth(4, 130); // Tri gia
+    bangHoaDon->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Stretch); // Bang chu
     bangHoaDon->setEditTriggers(QAbstractItemView::NoEditTriggers);
     bangHoaDon->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    bangTopVatTu->setColumnCount(5);
-    bangTopVatTu->setHorizontalHeaderLabels({"STT", "Ma VT", "Ten VT", "So luong xuat", "Doanh thu"});
-    bangTopVatTu->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    bangTopVatTu->setColumnCount(6);
+    bangTopVatTu->setHorizontalHeaderLabels({"STT", "Ma VT", "Ten VT", "So luong xuat", "Doanh thu", "Bang chu"});
+    bangTopVatTu->horizontalHeader()->setSectionResizeMode(QHeaderView::Interactive);
+    bangTopVatTu->setColumnWidth(0, 60);  // STT
+    bangTopVatTu->setColumnWidth(1, 90);  // Ma VT
+    bangTopVatTu->setColumnWidth(2, 200); // Ten VT
+    bangTopVatTu->setColumnWidth(3, 120); // So luong xuat
+    bangTopVatTu->setColumnWidth(4, 130); // Doanh thu
+    bangTopVatTu->horizontalHeader()->setSectionResizeMode(5, QHeaderView::Stretch); // Bang chu
     bangTopVatTu->setEditTriggers(QAbstractItemView::NoEditTriggers);
     bangTopVatTu->setSelectionBehavior(QAbstractItemView::SelectRows);
 
@@ -109,6 +122,9 @@ ThongKePage::ThongKePage(TreeVT &rootRef, DS_NHANVIEN &dsRef, QWidget *parent)
             bangHoaDon->setItem(i, 2, taoItemCanGiua(dong.loai == 'N' ? "Nhap" : "Xuat"));
             bangHoaDon->setItem(i, 3, new QTableWidgetItem(QString::fromUtf8(dong.hoTenNV.c_str())));
             bangHoaDon->setItem(i, 4, taoItemCanPhai(QString::number(dong.triGia, 'f', 0)));
+            
+            QString tienChu = QString::fromStdString(docSoThanhChu(static_cast<long long>(dong.triGia)));
+            bangHoaDon->setItem(i, 5, new QTableWidgetItem(tienChu));
         }
 
         huyDSThongKeHoaDon(ketQua);
@@ -134,6 +150,9 @@ ThongKePage::ThongKePage(TreeVT &rootRef, DS_NHANVIEN &dsRef, QWidget *parent)
             bangTopVatTu->setItem(i, 2, new QTableWidgetItem(QString::fromUtf8(dong.tenVT.c_str())));
             bangTopVatTu->setItem(i, 3, taoItemCanPhai(QString::number(dong.soLuong)));
             bangTopVatTu->setItem(i, 4, taoItemCanPhai(QString::number(dong.doanhThu, 'f', 0)));
+            
+            QString tienChu = QString::fromStdString(docSoThanhChu(static_cast<long long>(dong.doanhThu)));
+            bangTopVatTu->setItem(i, 5, new QTableWidgetItem(tienChu));
         }
 
         huyDSTopVatTuDoanhThu(ketQua);
