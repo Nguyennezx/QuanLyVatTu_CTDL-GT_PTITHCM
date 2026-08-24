@@ -99,11 +99,11 @@ ThongKePage::ThongKePage(TreeVT &rootRef, DS_NHANVIEN &dsRef, QWidget *parent)
 
         Date tuNgay = chuyenQDateSangDate(tuNgayEdit->date());
         Date denNgay = chuyenQDateSangDate(denNgayEdit->date());
-        std::vector<DongThongKeHoaDon> ketQua = thongKeHoaDonTheoThoiGian(dsnv, tuNgay, denNgay);
+        DS_THONGKE_HOADON ketQua = thongKeHoaDonTheoThoiGian(dsnv, tuNgay, denNgay);
 
-        bangHoaDon->setRowCount(static_cast<int>(ketQua.size()));
-        for (int i = 0; i < static_cast<int>(ketQua.size()); i++) {
-            const DongThongKeHoaDon& dong = ketQua[i];
+        bangHoaDon->setRowCount(ketQua.n);
+        for (int i = 0; i < ketQua.n; i++) {
+            const DongThongKeHoaDon& dong = ketQua.nodes[i];
             bangHoaDon->setItem(i, 0, taoItemCanGiua(dong.soHD));
             bangHoaDon->setItem(i, 1, taoItemCanGiua(dinhDangNgay(dong.ngayLap)));
             bangHoaDon->setItem(i, 2, taoItemCanGiua(dong.loai == 'N' ? "Nhap" : "Xuat"));
@@ -111,6 +111,7 @@ ThongKePage::ThongKePage(TreeVT &rootRef, DS_NHANVIEN &dsRef, QWidget *parent)
             bangHoaDon->setItem(i, 4, taoItemCanPhai(QString::number(dong.triGia, 'f', 0)));
         }
 
+        huyDSThongKeHoaDon(ketQua);
         tabKetQua->setCurrentWidget(bangHoaDon);
     });
 
@@ -123,11 +124,11 @@ ThongKePage::ThongKePage(TreeVT &rootRef, DS_NHANVIEN &dsRef, QWidget *parent)
 
         Date tuNgay = chuyenQDateSangDate(tuNgayEdit->date());
         Date denNgay = chuyenQDateSangDate(denNgayEdit->date());
-        std::vector<DongTopVatTuDoanhThu> ketQua = topVatTuDoanhThu(root, dsnv, tuNgay, denNgay, 10);
+        DS_TOP_VATTU_DOANHTHU ketQua = topVatTuDoanhThu(root, dsnv, tuNgay, denNgay, 10);
 
-        bangTopVatTu->setRowCount(static_cast<int>(ketQua.size()));
-        for (int i = 0; i < static_cast<int>(ketQua.size()); i++) {
-            const DongTopVatTuDoanhThu& dong = ketQua[i];
+        bangTopVatTu->setRowCount(ketQua.n);
+        for (int i = 0; i < ketQua.n; i++) {
+            const DongTopVatTuDoanhThu& dong = ketQua.nodes[i];
             bangTopVatTu->setItem(i, 0, taoItemCanGiua(QString::number(i + 1)));
             bangTopVatTu->setItem(i, 1, taoItemCanGiua(dong.maVT));
             bangTopVatTu->setItem(i, 2, new QTableWidgetItem(QString::fromUtf8(dong.tenVT.c_str())));
@@ -135,6 +136,7 @@ ThongKePage::ThongKePage(TreeVT &rootRef, DS_NHANVIEN &dsRef, QWidget *parent)
             bangTopVatTu->setItem(i, 4, taoItemCanPhai(QString::number(dong.doanhThu, 'f', 0)));
         }
 
+        huyDSTopVatTuDoanhThu(ketQua);
         tabKetQua->setCurrentWidget(bangTopVatTu);
     });
 }
