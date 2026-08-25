@@ -1,20 +1,30 @@
-VT025|ghế nhựa|cái|40|0
-VT023|sạc điện thoại|cái|20|0
-VT001|Đèn|Cái|10000|0
-VT004|Quạt|cái|5|1
-VT026|quạt điện|cái|8|0
-VT027|máy in|cái|3|0
-VT028|máy chiếu|cái|2|0
-VT029|bảng trắng|cái|5|1
-VT031|giấy A4|ram|50|0
-VT032|kệ sách|cái|6|0
-VT033|đèn LED|cái|25|0
-VT034|máy tính để bàn|bộ|12|0
-VT035|laptop|cái|10|0
-VT036|ổ cắm điện|cái|18|0
-VT037|dây mạng|mét|200|0
-VT038|chuột máy tính|cái|30|0
-VT040|máy quét|cái|4|0
-VT041|camera|cái|36|1
-VT042|máy lạnh|cái|7|0
-VT043|loa|cái|9|0
+VT001|Đèn huỳnh quang 1m2|cái|120|1
+VT002|Bàn làm việc gỗ|cái|15|1
+VT003|Ghế xoay văn phòng|cái|25|1
+VT004|Quạt trần Panasonic|cái|18|1
+VT005|Máy in HP LaserJet|cái|8|1
+VT006|Máy chiếu Epson|cái|5|1
+VT007|Bảng từ trắng 1.2x2m|cái|10|1
+VT008|Giấy A4 Double A 70gsm|ram|150|1
+VT009|Kệ sắt để hồ sơ|cái|12|1
+VT010|Đèn LED âm trần 12W|cái|80|1
+VT011|Máy tính PC Dell OptiPlex|bộ|20|1
+VT012|Laptop Dell Latitude|cái|14|1
+VT013|Ổ cắm điện Lioa 5m|cái|45|1
+VT014|Dây mạng Cat6 UTP|mét|500|1
+VT015|Chuột không dây Logitech|cái|60|1
+VT016|Máy quét Scanner Canon|cái|6|1
+VT017|Camera IP Hikvision|cái|30|1
+VT018|Máy lạnh Daikin 1.5HP|cái|10|1
+VT019|Loa vi tính SoundMax|bộ|22|1
+VT020|Sạc laptop Universal|cái|35|1
+VT021|Bàn phím cơ Logitech|cái|40|1
+VT022|Màn hình Dell 24 inch|cái|25|1
+VT023|Tai nghe Kingston HyperX|cái|18|1
+VT024|Ổ cứng SSD Samsung 500GB|cái|50|1
+VT025|Thẻ nhớ SanDisk 64GB|cái|100|1
+VT026|Bút viết bảng Flexoffice|hộp|80|0
+VT027|Kéo văn phòng Deli|cái|40|0
+VT028|Bìa thái A4 xanh|xấp|60|0
+VT029|Băng keo trong 5cm|cuộn|120|0
+VT030|Tủ tài liệu 4 ngăn|cái|7|0

@@ -52,8 +52,8 @@ static string docBaChuSo(int so) {
     return kq;
 }
 
-static string docNhom(int gia, bool batBuocDu3ChuSo) {
-    if (!batBuocDu3ChuSo) return docBaChuSo(gia);
+static string docNhom(int gia, bool laNhomDauTien) {
+    if (laNhomDauTien) return docBaChuSo(gia);
     int tram = gia / 100;
     int chuc = (gia % 100) / 10;
     int donvi = gia % 10;
@@ -92,7 +92,7 @@ string docSoThanhChu(long long soTien) {
         int gia = nhom[i];
         bool laNhomDauTien = (i == soNhom - 1);
         if (gia == 0) continue;
-        string phan = docNhom(gia, !laNhomDauTien);
+        string phan = docNhom(gia, laNhomDauTien);
         if (!ketQua.empty()) ketQua += " ";
         ketQua += phan;
         if (i < 8 && !DONVI_NHOM[i].empty()) ketQua += " " + DONVI_NHOM[i];
