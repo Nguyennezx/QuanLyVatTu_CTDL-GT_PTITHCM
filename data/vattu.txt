@@ -1,5 +1,5 @@
 VT001|Đèn huỳnh quang 1m2|cái|120|1
-VT002|Bàn làm việc gỗ|cái|15|1
+VT002|Bàn làm việc gỗ|cái|10|1
 VT003|Ghế xoay văn phòng|cái|25|1
 VT004|Quạt trần Panasonic|cái|18|1
 VT005|Máy in HP LaserJet|cái|8|1
@@ -14,11 +14,11 @@ VT013|Ổ cắm điện Lioa 5m|cái|45|1
 VT014|Dây mạng Cat6 UTP|mét|500|1
 VT015|Chuột không dây Logitech|cái|60|1
 VT016|Máy quét Scanner Canon|cái|6|1
-VT017|Camera IP Hikvision|cái|30|1
+VT017|Camera IP Hikvision|cái|39|1
 VT018|Máy lạnh Daikin 1.5HP|cái|10|1
 VT019|Loa vi tính SoundMax|bộ|22|1
 VT020|Sạc laptop Universal|cái|35|1
-VT021|Bàn phím cơ Logitech|cái|40|1
+VT021|Bàn phím cơ Logitech|cái|30|1
 VT022|Màn hình Dell 24 inch|cái|25|1
 VT023|Tai nghe Kingston HyperX|cái|18|1
 VT024|Ổ cứng SSD Samsung 500GB|cái|50|1
@@ -28,3 +28,4 @@ VT027|Kéo văn phòng Deli|cái|40|0
 VT028|Bìa thái A4 xanh|xấp|60|0
 VT029|Băng keo trong 5cm|cuộn|120|0
 VT030|Tủ tài liệu 4 ngăn|cái|7|0
+VT912|Xe đạp|chiếc|15|1
