@@ -32,5 +32,5 @@
 - **Kiểm tra Cây nhị phân**:
   - Phải có thuật toán kiểm tra một cây nhị phân có đúng hay không (tất cả các nút gốc và trung gian phải đủ 2 cây con, tức là bậc phải bằng 2).
  
-  *Lưu ý: Đồ án này mình sài QT creator nhá ( Ae nên sài QT nha vì mình thấy nó khá đơn giản hơn nhé )
+  *Lưu ý: Đồ án này mình sài QT creator nhá ( Ae nên sài QT nha vì mình thấy nó khá đơn giản )
   => Chúc anh em may mắn nhé 🍀🍀🍀🍀🍀
